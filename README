@@ -1,4 +1,58 @@
-Boyer-Moore算法,比kmp算法要快3-5倍
-
+1 Boyer-Moore算法,比kmp算法要快3-5倍
 https://blog.csdn.net/appleprince88/article/details/11881323
 
+2 冒泡排序改进：
+
+原理：於氣泡排序的雙向進行，先讓氣泡排序由左向右進行，再來讓氣泡排序由右往左進行，如此完成一次排序的動作，而您必須使用left與right兩個旗標來記錄左右兩端已排序的元素位置。
+
+一個排序的例子如下所示：
+
+排序前：45 19 77 81 13 28 18 19 77 11
+
+往右排序：19 45 77 13 28 18 19 77 11 [81]
+向左排序：[11] 19 45 77 13 28 18 19 77 [81]
+
+往右排序：[11] 19 45 13 28 18 19 [77 77 81]
+向左排序：[11 13] 19 45 18 28 19 [77 77 81]
+
+往右排序：[11 13] 19 18 28 19 [45 77 77 81]
+向左排序：[11 13 18] 19 19 28 [45 77 77 81]
+
+往右排序：[11 13 18] 19 19 [28 45 77 77 81]
+向左排序：[11 13 18 19 19] [28 45 77 77 81]
+
+如上所示，括號中表示左右兩邊已排序完成的部份，當left > right時，則排序完成。
+
+代码：
+
+void shakersort(int number[]) { 
+    int i, left = 0, right = MAX - 1, shift = 0; 
+
+    while(left < right) { 
+        // 向右進行氣泡排序 
+        for(i = left; i < right; i++) { 
+            if(number[i] > number[i+1]) { 
+                SWAP(number[i], number[i+1]); 
+                shift = i; 
+            } 
+        } 
+        right = shift; 
+
+        printf("\n往右排序："); 
+        for(i = 0; i < MAX; i++) 
+            printf("%d ", number[i]); 
+
+        // 向左進行氣泡排序 
+        for(i = right; i > left; i--) { 
+            if(number[i] < number[i-1]) { 
+                SWAP(number[i], number[i-1]); 
+                shift = i; 
+            } 
+        } 
+        left = shift; 
+
+        printf("\n向左排序："); 
+        for(i = 0; i < MAX; i++) 
+            printf("%d ", number[i]); 
+    } 
+} 
