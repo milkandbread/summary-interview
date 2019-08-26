@@ -61,3 +61,719 @@ void shakersort(int number[]) {
 堆排序
 堆(HEAP)必须要是完全二叉树，同时满足父节点的内容大于(或小于)子节点。
 堆的底层数据结构为一维数组，此时若当前节点为𝑖，则其父子节点索引可直接通过以下公式直接计算得到。
+
+
+
+1 设计一个支持 push，pop，top 操作，并能在常数时间内检索到最小元素的栈。
+
+    push(x) -- 将元素 x 推入栈中。
+    pop() -- 删除栈顶的元素。
+    top() -- 获取栈顶元素。
+    getMin() -- 检索栈中的最小元素。
+
+class MinStack {
+public:
+    stack<int> s;//数据栈
+    stack<int> min;//辅助栈
+    /** initialize your data structure here. */
+    MinStack() {
+        
+    }
+    
+    void push(int x) {
+        s.push(x);
+        if(min.empty()||x<=min.top())
+        {
+            min.push(x);
+        }
+    }
+    
+    void pop() {
+        if(s.top()==min.top())
+            min.pop();
+        s.pop();
+    }
+    
+    int top() {
+        return s.top();
+    }
+    int getMin() {
+        return min.top();
+    }
+};
+
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * MinStack* obj = new MinStack();
+ * obj->push(x);
+ * obj->pop();
+ * int param_3 = obj->top();
+ * int param_4 = obj->getMin();
+ */
+
+ 2 使用队列实现栈的下列操作：
+
+    push(x) -- 元素 x 入栈
+    pop() -- 移除栈顶元素
+    top() -- 获取栈顶元素
+    empty() -- 返回栈是否为空
+
+class MyStack {
+    queue<int> que;
+public:
+    /** Initialize your data structure here. */
+    /** Initialize your data structure here. */
+    MyStack() {
+        
+    }
+    
+    /** Push element x onto stack. */
+    void push(int x) {
+        queue<int> temp;
+        int t=0;
+        int length=que.size();
+        for(int i=0; i<length; i++)
+        {
+            t=que.front();
+            que.pop();
+            temp.push(t);
+        }
+        //     temp.push(que.pop());
+        que.push(x);
+        // cout<<x<<" ";
+        for(int i=0; i<length; i++)
+        {
+            t=temp.front();
+            que.push(t);
+            temp.pop();
+           // cout<<t<<" ";
+        }
+        //cout<<endl;
+        //     que.push(temp.pop());
+    }
+    
+    /** Removes the element on top of the stack and returns that element. */
+    int pop() {
+        if(que.empty())
+            return 0;
+        int t=que.front();
+        que.pop();
+        return t;
+    }
+    
+    /** Get the top element. */
+    int top() {
+        if(que.empty())
+            return 0;
+        return que.front();
+    }
+    
+    /** Returns whether the stack is empty. */
+    bool empty() {
+        return que.empty();
+    }
+};
+
+/**
+ * Your MyStack object will be instantiated and called as such:
+ * MyStack* obj = new MyStack();
+ * obj->push(x);
+ * int param_2 = obj->pop();
+ * int param_3 = obj->top();
+ * bool param_4 = obj->empty();
+ */
+
+ 使用栈实现队列的下列操作：
+
+    push(x) -- 将一个元素放入队列的尾部。
+    pop() -- 从队列首部移除元素。
+    peek() -- 返回队列首部的元素。
+    empty() -- 返回队列是否为空。
+
+示例:
+
+MyQueue queue = new MyQueue();
+
+queue.push(1);
+queue.push(2);  
+queue.peek();  // 返回 1
+queue.pop();   // 返回 1
+queue.empty(); // 返回 false
+
+class MyQueue {
+    stack<int> st;
+public:
+    /** Initialize your data structure here. */
+    MyQueue() {
+        
+    }
+    
+    /** Push element x to the back of queue. */
+    void push(int x) {
+        stack<int> tmp;
+        int i=0,t=0;
+        for(i=0;i<st.size();i++)
+        {
+            t = st.top();
+            st.pop();
+            tmp.push(t);
+        }
+        st.push(x);
+        for(i=0;i<tmp.size();i++)
+        {
+            t = tmp.top();
+            tmp.pop();
+            st.push(t);
+        }
+    }
+    
+    /** Removes the element from in front of queue and returns that element. */
+    int pop() {
+        stack<int> tmp;
+        int i=0,t=0;
+        for(i=0;i<st.size();i++)
+        {
+            t = st.top();
+            st.pop();
+            tmp.push(t);
+        }
+        
+        for(i=0;i<tmp.size()-1;i++)
+        {
+            t = tmp.top();
+            tmp.pop();
+            st.push(t);
+        }
+        
+        return t;
+    }
+    
+    /** Get the front element. */
+    int peek() {
+        int i=0,t =0;
+        for(i=0;i<st.size();i++)
+        {
+            t = st.top();
+        }
+        return t;
+    }
+    
+    /** Returns whether the queue is empty. */
+    bool empty() {
+        if(st.empty())
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+};
+
+/**
+ * Your MyQueue object will be instantiated and called as such:
+ * MyQueue* obj = new MyQueue();
+ * obj->push(x);
+ * int param_2 = obj->pop();
+ * int param_3 = obj->peek();
+ * bool param_4 = obj->empty();
+ */
+
+
+你现在是棒球比赛记录员。
+给定一个字符串列表，每个字符串可以是以下四种类型之一：
+1.整数（一轮的得分）：直接表示您在本轮中获得的积分数。
+2. "+"（一轮的得分）：表示本轮获得的得分是前两轮有效 回合得分的总和。
+3. "D"（一轮的得分）：表示本轮获得的得分是前一轮有效 回合得分的两倍。
+4. "C"（一个操作，这不是一个回合的分数）：表示您获得的最后一个有效 回合的分数是无效的，应该被移除。
+
+class Solution {
+public:
+    int calPoints(vector<string>& ops) {
+        int sum=0;
+        vector<int>v;
+        int j=0;
+        for(int i=0;i<ops.size();i++){
+            string s=ops[i];
+            if(s=="C"){  //注意这里用" "  因为向量为字符串类型
+                sum-=v[j-1];
+                v.pop_back();
+                j--;
+ 
+            }
+            else if(s=="D"){
+                sum+=2*v[j-1];
+                v.push_back(2*v[j-1]);
+                j++;
+            }
+            else if(s=="+"){
+                sum+=v[j-1]+v[j-2];
+                v.push_back(v[j-1]+v[j-2]);
+                j++;
+            }
+            else{
+                sum+=stoi(s);  //C++ 11标准特性，直接将字符转换成整数.
+                v.push_back(stoi(s));
+                j++;
+            }
+        
+           
+        }
+         return sum;
+    }
+};
+
+
+
+给定 S 和 T 两个字符串，当它们分别被输入到空白的文本编辑器后，判断二者是否相等，并返回结果。 # 代表退格字符。
+
+ 
+
+示例 1：
+
+输入：S = "ab#c", T = "ad#c"
+输出：true
+解释：S 和 T 都会变成 “ac”。
+
+bool backspaceCompare(string S, string T)
+{
+    int len1 = S.size();
+    int len2 = T.size();
+    string s1, t1;
+    stack<char> stk;
+    for (int i = 0;i < len1;i++)
+    {
+        if (S[i] != '#')
+        {
+            stk.push(S[i]);
+        }
+        else
+        {
+            if (!stk.empty())
+            {
+                stk.pop();
+            }
+        }
+    }
+    while (!stk.empty())
+    {
+        s1 += stk.top();
+        stk.pop();
+    }
+    for (int i = 0;i < len2;i++)
+    {
+        if (T[i] != '#')
+        {
+            stk.push(T[i]);
+        }
+        else
+        {
+            if (!stk.empty())
+            {
+                stk.pop();
+            }
+        }
+    }
+    while (!stk.empty())
+    {
+        t1 += stk.top();
+        stk.pop();
+    }
+    return s1 == t1 ? true : false;
+}
+
+
+
+如果有效字符串 S 非空，且不存在将其拆分为 S = A+B 的方法，我们称其为原语（primitive），其中 A 和 B 都是非空有效括号字符串。
+
+
+示例 1：
+
+输入："(()())(())"
+输出："()()()"
+解释：
+输入字符串为 "(()())(())"，原语化分解得到 "(()())" + "(())"，
+删除每个部分中的最外层括号后得到 "()()" + "()" = "()()()"。
+
+class Solution {
+public:
+    string removeOuterParentheses(string S) {
+        int flag = 0;
+        int len = S.length();
+        string ret;
+        int i =0;
+        
+        for(i=0;i<len;i++)
+        {
+            if(S[i] == '(' )
+            {
+                if (flag > 0)
+                {
+                    ret += S[i];
+                }
+                flag++;
+            }
+            else if( S[i] == ')')
+            {
+                flag--;
+                if( flag > 0)
+                {
+                    ret += S[i];
+                }
+            }
+        }
+        
+        return ret;
+    }
+};
+
+
+给出由小写字母组成的字符串 S，重复项删除操作会选择两个相邻且相同的字母，并删除它们
+示例：
+
+输入："abbaca"
+输出："ca"
+解释：
+例如，在 "abbaca" 中，我们可以删除 "bb" 由于两字母相邻且相同，这是此时唯一可以执行删除操作的重复项。之后我们得到字符串 "aaca"，其中又只有 "aa" 可以执行重复项删除操作，所以最后的字符串为 "ca"。
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/remove-all-adjacent-duplicates-in-string
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+
+class Solution {
+public:
+    string removeDuplicates(string S) {
+        vector<char> vec;
+        int len = S.length();
+        int i=0, j=0;
+        string ret;
+        
+        for(i=0;i<len;i++)
+        {
+            if(!vec.empty() ) 
+            {
+                if (S[i] == vec[j-1])
+                {
+                vec.pop_back();
+                j--;
+                }
+            }
+            else
+            {
+                vec.push_back(S[i]);
+                j++;
+            }
+        }
+        
+        for(i=0;i<vec.size();i++)
+        {
+            ret += vec[i];
+        }
+        return ret;
+    }
+};
+
+-----------------------------------------------
+在 Unix 风格的文件系统中，一个点（.）表示当前目录本身；此外，两个点 （..） 表示将目录切换到上一级（指向父目录）；两者都可以是复杂相对路径的组成部分.
+示例 1：
+
+输入："/home/"
+输出："/home"
+解释：注意，最后一个目录名后面没有斜杠。
+
+示例 2：
+
+输入："/../"
+输出："/"
+解释：从根目录向上一级是不可行的，因为根是你可以到达的最高级。
+
+示例 3：
+
+输入："/home//foo/"
+输出："/home/foo"
+解释：在规范路径中，多个连续斜杠需要用一个斜杠替换。
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/simplify-path
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+
+class Solution {
+public:
+    string simplifyPath(string path) {
+        stack<string> st;
+        string str;
+        string ret;
+        int i=0;
+        
+        for(i=0;i<path.length();i++)
+        {
+            if(path[i] != '/')
+            {
+                str += path[i];
+            }
+            
+            if(str.length()>0 && path[i] == '/')
+            {
+                if(str==".." && !st.empty())
+                {
+                    st.pop();
+                }
+                else 
+                {
+                    st.push(str);
+                }
+                str="";
+            }
+        }
+        for(i=0;i<st.size();i++)
+        {
+            ret += "/";
+            ret += st.top();
+            st.pop();
+        }
+        return ret;
+    }
+};
+
+
+给定一个二叉树，返回其节点值的锯齿形层次遍历。（即先从左往右，再从右往左进行下一层遍历，以此类推，层与层之间交替进行）。
+
+例如：
+给定二叉树 [3,9,20,null,null,15,7],
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+
+返回锯齿形层次遍历如下：
+
+[
+  [3],
+  [20,9],
+  [15,7]
+]
+
+class Solution {
+public:
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+        vector< vector<int>> vec;
+        queue<TreeNode *> first;
+        queue<TreeNode *> second;
+        TreeNode *tmp_tree;
+        first.push(root);
+        
+        while(!first.empty())
+        {
+            vector<int> sub_vect;
+            while(!first.empty())
+            {
+                tmp_tree = first.front();
+                first.pop();
+                sub_vect.push_back(tmp_tree->val);
+                if(tmp_tree->left)
+                {
+                    second.push(tmp_tree->left);
+                }
+                if(tmp_tree->right)
+                {
+                    second.push(tmp_tree->right);
+                }
+            }
+            vec.push_back(sub_vect);
+            first.swap(second);
+        }
+        return vec;
+    }
+};
+
+
+
+给定一个二叉树，返回它的 前序 遍历。
+
+ 示例:
+
+输入: [1,null,2,3]  
+   1
+    \
+     2
+    /
+   3 
+
+输出: [1,2,3]
+
+class Solution {
+public:
+    vector<int> preorderTraversal(TreeNode* root) {
+        stack<TreeNode *> st;
+        TreeNode *tmp_tree = root;
+        vector<int> vec;
+        
+        while(tmp_tree || !st.empty())
+        {
+            while(tmp_tree)
+            {
+                vec.push_back(tmp_tree->val);
+                st.push(tmp_tree);
+                tmp_tree = tmp_tree->left;
+            }
+            if(!st.empty())
+            {
+                tmp_tree = st.top();
+                st.pop();
+                tmp_tree=tmp_tree->right;
+            }
+        }
+        
+        return vec;
+    }
+};
+
+
+有效的运算符包括 +, -, *, / 。每个运算对象可以是整数，也可以是另一个逆波兰表达式。
+示例 1：
+
+输入: ["2", "1", "+", "3", "*"]
+输出: 9
+解释: ((2 + 1) * 3) = 9
+
+
+class Solution {
+public:
+    int evalRPN(vector<string>& tokens) {
+        int i=0,j=0;
+        int ret=0;
+        stack<int> vec;
+        int sum=0;
+        
+        for(i=0;i<tokens.size();i++)
+        {
+            if(vec.size()>1 && tokens[i] == "+")
+            {
+                int first = vec.top();
+                vec.pop();
+                int second = vec.top();
+                vec.pop();
+                sum = first+second;
+                vec.push(sum);
+            }
+            else if(vec.size()>1 && tokens[i] == "-")
+            {
+                int first = vec.top();
+                vec.pop();
+                int second = vec.top();
+                vec.pop();
+                sum = first-second;
+                vec.push(sum);
+            }
+            else if(vec.size()>1 && tokens[i] == "/")
+            {
+                int first = vec.top();
+                vec.pop();
+                int second = vec.top();
+                vec.pop();
+                sum = first/second;
+                vec.push(sum);
+            }
+            else if(vec.size()>1 && tokens[i] == "*")
+            {
+                int first = vec.top();
+                vec.pop();
+                int second = vec.top();
+                vec.pop();
+                sum = first*second;
+                vec.push(sum);
+            }
+            else
+            {
+                vec.push(stoi(tokens[i]));
+                j++;
+            }
+        }
+        if(vec.size() == 1)
+        {
+            sum = vec.top();
+            vec.pop();
+        }
+        
+        return sum;
+    }
+};
+
+
+
+实现一个二叉搜索树迭代器。你将使用二叉搜索树的根节点初始化迭代器。
+
+调用 next() 将返回二叉搜索树中的下一个最小的数。
+
+ 
+
+示例：
+
+BSTIterator iterator = new BSTIterator(root);
+iterator.next();    // 返回 3
+iterator.next();    // 返回 7
+iterator.hasNext(); // 返回 true
+iterator.next();    // 返回 9
+iterator.hasNext(); // 返回 true
+iterator.next();    // 返回 15
+iterator.hasNext(); // 返回 true
+iterator.next();    // 返回 20
+iterator.hasNext(); // 返回 false
+
+
+class BSTIterator {
+public:
+    BSTIterator(TreeNode *root) {
+        if(root) createStack(root);
+    }
+    void createStack(TreeNode *root) {
+        if (root->right) createStack(root->right);
+        if (root) s.push(root->val);
+        if (root->left) createStack(root->left);
+    }
+    /** @return whether we have a next smallest number */
+    bool hasNext() {
+        return !s.empty();
+    }
+ 
+    /** @return the next smallest number */
+    int next() {
+        int tmp = s.top();
+        s.pop();
+        return tmp;
+    }
+private:
+    stack<int> s;
+};
+
+
+
+给定一个循环数组（最后一个元素的下一个元素是数组的第一个元素），输出每个元素的下一个更大元素。数字 x 的下一个更大的元素是按数组遍历顺序，这个数字之后的第一个比它更大的数，这意味着你应该循环地搜索它的下一个更大的数。如果不存在，则输出 -1。
+
+示例 1:
+
+输入: [1,2,1]
+输出: [2,-1,2]
+解释: 第一个 1 的下一个更大的数是 2；
+数字 2 找不到下一个更大的数； 
+第二个 1 的下一个最大的数需要循环搜索，结果也是 2。
+
+class Solution {
+public:
+    vector<int> nextGreaterElements(vector<int>& nums) {
+      int n = nums.size();
+        vector<int> res(n); // 存放结果
+        stack<int> s;
+        // 假装这个数组长度翻倍了
+        for (int i = 2 * n - 1; i >= 0; i--) {
+            while (!s.empty() && s.top() <= nums[i % n])
+                s.pop();
+            res[i % n] = s.empty() ? -1 : s.top();
+            s.push(nums[i % n]);
+        }
+        return res;
+    }
+};
